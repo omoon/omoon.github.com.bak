@@ -1,0 +1,65 @@
+body {
+    padding:0;
+    margin:0;
+    background:#999;
+}
+
+.header {
+    font-size:14px;
+    background:#999;
+    width:100%;
+    height:49px;
+    z-index:2;
+
+}
+
+.wrapper {
+    width:980px;
+    margin:0 auto;
+}
+
+.viewer_frame {
+    background-color:#fff;
+    top:50px;
+    left:260px;
+    width:980px;
+    height:640px;
+    z-index:2;
+}
+
+.left_shade{
+    position:relative;
+    float:left;
+    background: rgb(198, 198, 198); opacity: 0.4;
+    width:270px;
+    height:100%;
+    z-index:2;
+}
+
+.right_shade{
+    position:relative;
+    float:right;
+    background: rgb(198, 198, 198); opacity: 0.4;
+    width:260px;
+    height:100%;
+    z-index:2;
+
+}
+
+.scandata_area {
+    position:absolute;
+    top:50px;
+    height:640px;
+    width:980px;
+    overflow-y:scroll;
+}
+
+.scandata_wrapper {
+    padding-left:270px;
+    width:10000px;
+}
+
+.scandata {
+    float:left;
+}
+
