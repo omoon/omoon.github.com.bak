@@ -1,10 +1,20 @@
+var max_page = 7;
+
 $(document).ready(function(){
 
     // 初期化
+
+    /**
+     * 現在のページ
+     */
+    var page = 1;
+
     var scale = 1.5;
     var scroll_scale = 10;
+
     var counter = 0;
-    var initial_padding_left_of_scandata_wrapper = 270;
+
+    var initial_padding_left_of_scandata_wrapper = 495;
     var padding_left_of_scandata_wrapper = initial_padding_left_of_scandata_wrapper;
 
     var scandata_height = 128;
@@ -20,51 +30,63 @@ $(document).ready(function(){
     margin_top_of_scandata_wrapper = (640 - scandata_height) / 2;
     arrangePict(margin_top_of_scandata_wrapper);
 
+    $(".scandata_wrapper").css("padding-left", initial_padding_left_of_scandata_wrapper + 'px');
+    $(".scandata").last().css("padding-right", initial_padding_left_of_scandata_wrapper + 'px');
+
     $('html').keydown(function(e) {
+
+        // Shift 押下時は 10 倍
         scroll = e.shiftKey ? scroll_scale * 10 : scroll_scale;
+
         switch(e.which) {
             case 39: // Key[→]
-                $(".scandata_area").scrollLeft(getScrollLeft() + scroll);
+                page = getPage(page, scroll, width_of_scandata);
+                doScroll(page, width_of_scandata);
                 break;
 
             case 37: // Key[←]
-                $(".scandata_area").scrollLeft(getScrollLeft() - scroll);
+                page = getPage(page, scroll * -1, width_of_scandata);
+                doScroll(page, width_of_scandata);
                 break;
 
             case 38: // Key[↑]
                 counter++;
-                $(".scandata_area").scrollLeft(reCalcScrollLeft(1, width_of_scandata, scale));
                 scandata_height *= scale;
                 width_of_scandata *= scale;
                 width_of_scandatas *= scale;
                 $(".scandata").css("height", scandata_height);
+                doScroll(page, width_of_scandata);
                 reArrangePict();
                 break;
 
             case 40: // Key[↓]
                 counter--;
-                $(".scandata_area").scrollLeft(reCalcScrollLeft(-1, width_of_scandata, scale));
                 scandata_height /= scale;
                 width_of_scandata /= scale;
                 width_of_scandatas /= scale;
                 $(".scandata").css("height", scandata_height);
+                doScroll(page, width_of_scandata);
                 reArrangePict();
                 break;
 
             case 83: // Key[S]
-                $(".scandata_area").scrollLeft(0);
+                page = 1;
+                doScroll(page, width_of_scandata);
                 break;
 
             case 76: // Key[L]
-                $(".scandata_area").scrollLeft(width_of_scandatas - width_of_scandata);
+                page = max_page;
+                doScroll(page, width_of_scandata);
                 break;
 
             case 74: // Key[J]
-                var page_num = prompt("ページ番号を入力してください", "");
-                $(".scandata_area").scrollLeft(width_of_scandata * (page_num - 1));
+                page = prompt("ページ番号を入力してください", "") * 1;
+                doScroll(page, width_of_scandata);
                 break;
 
         }
+
+        //alert(page);
 
         //$(".viewer_frame").animate({
         //    left: $(window).scrollLeft() + 50
@@ -77,31 +99,39 @@ $(document).ready(function(){
 
 });
 
-function getScrollLeft() {
-    return $(".scandata_area").scrollLeft();
-}
-
-function reCalcScrollLeft(type, width_of_scandata, scale) {
-    var scroll_left = getScrollLeft();
-    if (type > 0) {
-        scroll_left *= scale;
-        // おっきくなったサイズの半分だけ右に動かす
-        //scroll_left = scroll_left + (width_of_scandata * scale - width_of_scandata) / 2;
-
-    } else if (type < 0) {
-        scroll_left /= scale;
-        // ちっさくなったサイズだけ右に動かす
-        //scroll_left = scroll_left + (width_of_scandata - width_of_scandata / scale) / 2;
+function getPage(page, scroll, width_of_scandata) {
+    page = page + scroll / width_of_scandata;
+    if (page < 1) {
+        page = 1;
     }
-    return scroll_left;
+    if (page > max_page + 1) {
+        page = max_page + 1;
+    }
+    return page;
 }
 
-function reArrangePict() {
-    $(".scandata").last().css('width', '5000px');
-    margin_top = (640 - parseInt($(".scandata").css("height"))) / 2;
-    arrangePict(margin_top);
+function doScroll(page, width_of_scandata) {
+    $(".scandata_area").scrollLeft(width_of_scandata * (page - 1));
+    displayPage(page);
 }
 
+function displayPage(page) {
+    $("#pager").html('page : ' + parseInt(page));
+}
+
+/**
+ * 縦位置の調整
+ *
+ */
 function arrangePict(top) {
     $(".scandata_wrapper").css("margin-top", top + 'px');
+}
+
+/**
+ * リサイズ後の縦位置の調整
+ *
+ */
+function reArrangePict() {
+    margin_top = (640 - parseInt($(".scandata").css("height"))) / 2;
+    arrangePict(margin_top);
 }
