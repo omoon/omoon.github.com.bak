@@ -63,6 +63,7 @@ body {
 }
 
 .scandata {
+    border:1px solid #f00;
     float:left;
 }
 
