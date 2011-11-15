@@ -64,7 +64,7 @@ var Scroller = function() {
 
         for (var i = 1; i < this.max_box_num; i ++) {
             scandata_clone = this.scandata.eq(0).clone();
-            this.scandata_wrapper.append(scandata_clone.attr('id', 'scandata' + i));
+            this.scandata_wrapper.append(scandata_clone);
 
             // 追加したものを追加
             this.scandata = $("." + this.scandata.attr('class'));
@@ -79,7 +79,7 @@ var Scroller = function() {
 
     this.initialize = function() {
         this.scandata.css("height", this.height_of_scandata + 'px');
-        this.width_of_scandata = parseInt(this.scandata.eq(0).css("width"));
+        this.width_of_scandata = parseInt(this.scandata.css("width"));
         this.scandata_wrapper.css("padding-left", this.padding_of_scandata_wrapper + 'px');
         this.scandata.last().css("padding-right", this.padding_of_scandata_wrapper + 'px');
         this.reSize();
@@ -87,11 +87,25 @@ var Scroller = function() {
 
     this.scrollRight = function(is_shift) {
         this.calcBoxPosition(1, is_shift);
+        if (false === this.isScrollable(1)) {
+            this.box_position--;
+            this.shift_num++;
+            for (var i = 0; i < this.max_box_num; i ++) {
+                this.scandata.eq(i).attr('src', this.images[i + this.shift_num]);
+            }
+        }
         this.doScroll();
     };
 
     this.scrollLeft = function(is_shift) {
         this.calcBoxPosition(-1, is_shift);
+        if (false === this.isScrollable(-1)) {
+            this.box_position++;
+            this.shift_num--;
+            for (var i = 0; i < this.max_box_num; i ++) {
+                this.scandata.eq(i).attr('src', this.images[i + this.shift_num]);
+            }
+        }
         this.doScroll();
     };
 
@@ -147,13 +161,6 @@ var Scroller = function() {
      * スクロール
      */
     this.doScroll = function() {
-        if (false === this.isScrollable()) {
-            this.box_position--;
-            this.shift_num++;
-            for (var i = 0; i < this.max_box_num; i ++) {
-                this.scandata.eq(i).attr('src', this.images[i + this.shift_num]);
-            }
-        }
         this.scandata_area.scrollLeft(this.width_of_scandata * (this.box_position - 1));
         this.displayPage();
     };
@@ -186,10 +193,26 @@ var Scroller = function() {
     /**
      * 通常スクロールしてもいいか
      */
-    this.isScrollable = function() {
-        if (this.box_position < this.max_box_num / 2 + 1) {
-            return true;
+    this.isScrollable = function(direction) {
+
+        if (direction > 0) {
+            if (this.box_position <= this.max_box_num / 2 + 1) {
+                return true;
+            }
+            if (this.page_num > this.images.length / 4 * 3) {
+                return true;
+            }
         }
+
+        if (direction < 0) {
+            if (this.box_position > this.max_box_num / 2) {
+                return true;
+            }
+            if (this.page_num < this.images.length / 4) {
+                return true;
+            }
+        }
+
         return false;
     };
 
