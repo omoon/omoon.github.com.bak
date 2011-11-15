@@ -145,16 +145,23 @@ var Scroller = function() {
         if (false === this.isScrollable(direction)) {
             this.box_position = this.box_position - direction;
             this.shift_num = this.shift_num + direction;
-            for (var i = 0; i < this.max_box_num; i ++) {
-                this.scandata.eq(i).attr('src', this.images[i + this.shift_num]);
-            }
         }
     }
+
+    /**
+     * 画像の入れ替え
+     */
+    this.swapImages = function() {
+        for (var i = 0; i < this.max_box_num; i ++) {
+            this.scandata.eq(i).attr('src', this.images[i + this.shift_num]);
+        }
+    };
 
     /**
      * スクロール
      */
     this.doScroll = function() {
+        this.swapImages();
         this.scandata_area.scrollLeft(this.width_of_scandata * (this.box_position - 1));
         this.displayPage();
     };
@@ -163,17 +170,44 @@ var Scroller = function() {
      * 先頭に戻る
      */
     this.scrollToStart = function() {
-        this.box_position = 1;
-        this.page_num = 1;
-        this.doScroll();
+        this.jumpTo(1);
     };
 
     /**
      * 末尾に戻る
      */
     this.scrollToLast = function() {
-        this.box_position = this.max_box_num + 1;
-        this.page_num = 100;
+        this.jumpTo(this.images.length);
+    };
+
+    /**
+     * ジャンプ
+     */
+    this.jumpTo = function(page_num) {
+        this.page_num = page_num;
+
+        // shift_num の最大
+        var max_shift_num = this.images.length - this.max_box_num;
+
+        // shift 発動時のbox_num
+        var box_num_when_shifting = Math.round(this.max_box_num / 2);
+
+        if (this.page_num <= box_num_when_shifting) {
+            this.shift_num = 0;
+            this.box_position = this.page_num;
+
+        } else if (this.page_num > box_num_when_shifting) {
+
+            this.shift_num = this.page_num - box_num_when_shifting;
+
+            if (this.shift_num > max_shift_num) {
+                this.box_position = box_num_when_shifting + this.shift_num - max_shift_num;
+                this.shift_num = max_shift_num;
+            } else {
+                this.box_position = box_num_when_shifting;
+            }
+
+        }
         this.doScroll();
     };
 
@@ -256,8 +290,7 @@ $(document).ready(function(){
                 break;
 
             case 74: // Key[J]
-                S.box_position = prompt("ページ番号を入力してください", "") * 1;
-                S.doScroll();
+                S.jumpTo(prompt("ページ番号を入力してください", "") * 1);
                 break;
 
         }
