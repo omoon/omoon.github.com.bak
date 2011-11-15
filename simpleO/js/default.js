@@ -7,7 +7,7 @@ var Scroller = function() {
     /**
      * ズレの値
      */
-    this.shift_num = 1;
+    this.shift_num = 0;
     
     this.max_box_num = 7;
 
@@ -146,7 +146,7 @@ var Scroller = function() {
             this.box_position = this.box_position - direction;
             this.shift_num = this.shift_num + direction;
             for (var i = 0; i < this.max_box_num; i ++) {
-                this.scandata.eq(i).attr('src', this.images[i + this.shift_num - 1]);
+                this.scandata.eq(i).attr('src', this.images[i + this.shift_num]);
             }
         }
     }
