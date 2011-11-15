@@ -43,7 +43,10 @@ var Scroller = function() {
     /**
      * 画像配列
      */
-    this.images = ([ 
+    this.images = ([]);
+    this.books = ([]);
+
+    this.books[1] = ([ 
             'images/001.jpg',
             'images/002.jpg',
             'images/003.jpg',
@@ -56,11 +59,39 @@ var Scroller = function() {
             'images/010.jpg'
             ]);
 
+    this.books[2] = ([ 
+            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0001.jpg',
+            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0002.jpg',
+            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0003.jpg',
+            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0004.jpg',
+            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0005.jpg',
+            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0006.jpg',
+            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0007.jpg',
+            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0008.jpg',
+            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0009.jpg',
+            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0010.jpg',
+            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0011.jpg',
+            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0012.jpg',
+            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0013.jpg',
+            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0014.jpg',
+            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0015.jpg',
+            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0016.jpg',
+            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0017.jpg',
+            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0018.jpg',
+            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0019.jpg'
+            ]);
+
     /**
      * 初期化
      *
      */
-    this.loadImages = function() {
+    this.loadImages = function(book_num) {
+
+        this.images = this.books[book_num];
+
+        for (var i = 1; i < this.max_box_num; i ++) {
+            this.scandata.eq(i).remove();
+        }
 
         for (var i = 1; i < this.max_box_num; i ++) {
             scandata_clone = this.scandata.eq(0).clone();
@@ -215,7 +246,7 @@ var Scroller = function() {
      * ページ番号表示
      */
     this.displayPage = function() {
-        this.pager.html(parseInt(this.page_num) + '/' + this.box_position);
+        this.pager.html('page : ' + parseInt(this.page_num));// + '/' + this.box_position);
     };
 
     /**
@@ -247,8 +278,6 @@ var Scroller = function() {
 
 $(document).ready(function(){
 
-    // 初期化
-
     var S = new Scroller();
 
     S.scandata = $(".scandata");
@@ -256,7 +285,7 @@ $(document).ready(function(){
     S.scandata_wrapper = $(".scandata_wrapper");
     S.pager = $("#pager");
 
-    S.loadImages();
+    S.loadImages(1);
     $(".scandata").first().bind('load', function() {
         // 最初の画像の読み込みが終わってから初期化する
         S.initialize();
@@ -295,14 +324,14 @@ $(document).ready(function(){
 
         }
 
-        //alert(page);
+    });
 
-        //$(".viewer_frame").animate({
-        //    left: $(window).scrollLeft() + 50
-        //    }, 30, function() {
-        //    // Animation complete.
-        //});
-
+    $("#book").change(function() {
+        S.loadImages($(this).val());
+        $(".scandata").first().bind('load', function() {
+            // 最初の画像の読み込みが終わってから初期化する
+            S.initialize();
+        });
     });
 
 });
