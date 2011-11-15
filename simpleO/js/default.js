@@ -104,11 +104,6 @@ $(document).ready(function(){
     S.pager = $("#pager");
 
 
-    /**
-     * 現在のページ
-     */
-    var scale = 1.5;
-
     var initial_padding_left_of_scandata_wrapper = 495;
     var padding_left_of_scandata_wrapper = initial_padding_left_of_scandata_wrapper;
 
@@ -154,8 +149,8 @@ $(document).ready(function(){
                 break;
 
             case 74: // Key[J]
-                page = prompt("ページ番号を入力してください", "") * 1;
-                doScroll(page, width_of_scandata);
+                S.box_position = prompt("ページ番号を入力してください", "") * 1;
+                S.doScroll();
                 break;
 
         }
@@ -171,27 +166,6 @@ $(document).ready(function(){
     });
 
 });
-
-function getPage(page, scroll, width_of_scandata) {
-    page = page + scroll / width_of_scandata;
-    if (page < 1) {
-        page = 1;
-    }
-    if (page > max_page + 1) {
-        page = max_page + 1;
-    }
-    return page;
-}
-
-function doScroll(page, width_of_scandata) {
-    $(".scandata_area").scrollLeft(width_of_scandata * (page - 1));
-    displayPage(page);
-}
-
-function displayPage(page) {
-    //$("#pager").html('page : ' + parseInt(page));
-    $("#pager").html('page : ' + page);
-}
 
 /**
  * 縦位置の調整
