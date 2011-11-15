@@ -47,6 +47,7 @@ var Scroller = function() {
 
             // 追加したものを追加
             this.scandata = $("." + this.scandata.attr('class'));
+
         }
 
         imgs = ([ 
