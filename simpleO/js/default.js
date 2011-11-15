@@ -43,7 +43,7 @@ var Scroller = function() {
     /**
      * 画像配列
      */
-    this.images = ([]);
+    this.images = '';
     this.books = ([]);
 
     this.books[1] = ([ 
