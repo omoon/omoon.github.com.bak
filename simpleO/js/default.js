@@ -7,7 +7,7 @@ var Scroller = function() {
     /**
      * ズレの値
      */
-    this.shift_num = 0;
+    this.shift_num = 1;
     
     this.max_box_num = 7;
 
@@ -87,25 +87,11 @@ var Scroller = function() {
 
     this.scrollRight = function(is_shift) {
         this.calcBoxPosition(1, is_shift);
-        if (false === this.isScrollable(1)) {
-            this.box_position--;
-            this.shift_num++;
-            for (var i = 0; i < this.max_box_num; i ++) {
-                this.scandata.eq(i).attr('src', this.images[i + this.shift_num]);
-            }
-        }
         this.doScroll();
     };
 
     this.scrollLeft = function(is_shift) {
         this.calcBoxPosition(-1, is_shift);
-        if (false === this.isScrollable(-1)) {
-            this.box_position++;
-            this.shift_num--;
-            for (var i = 0; i < this.max_box_num; i ++) {
-                this.scandata.eq(i).attr('src', this.images[i + this.shift_num]);
-            }
-        }
         this.doScroll();
     };
 
@@ -155,6 +141,14 @@ var Scroller = function() {
         if (this.page_num > this.images.length) {
             this.page_num = this.images.length;
         }
+
+        if (false === this.isScrollable(direction)) {
+            this.box_position = this.box_position - direction;
+            this.shift_num = this.shift_num + direction;
+            for (var i = 0; i < this.max_box_num; i ++) {
+                this.scandata.eq(i).attr('src', this.images[i + this.shift_num - 1]);
+            }
+        }
     }
 
     /**
@@ -194,25 +188,23 @@ var Scroller = function() {
      * 通常スクロールしてもいいか
      */
     this.isScrollable = function(direction) {
-
         if (direction > 0) {
-            if (this.box_position <= this.max_box_num / 2 + 1) {
+            if (this.box_position < this.max_box_num / 2 + 1) {
                 return true;
             }
-            if (this.page_num > this.images.length / 4 * 3) {
+            if (this.images[this.images.length - 1] == this.scandata.last().attr('src')) {
                 return true;
             }
         }
 
         if (direction < 0) {
-            if (this.box_position > this.max_box_num / 2) {
+            if (this.box_position > this.max_box_num / 2 + 1) {
                 return true;
             }
-            if (this.page_num < this.images.length / 4) {
+            if (this.images[0] == this.scandata.first().attr('src')) {
                 return true;
             }
         }
-
         return false;
     };
 
