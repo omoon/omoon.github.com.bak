@@ -1,14 +1,17 @@
-<html>
+<!DOCTYPE html>  
+<html lang="ja">  
+<head>
+    <meta charset="utf-8" />
+    <title>fb!</title>
+</head>
 
-    <head>
-        <title>fb!</title>
+<body>
 
-    </head>
-    <body>
-        <a href="javascript:t=document.body.innerHTML;s=t.match(/%E8%AA%95%E7%94%9F%E6%97%A5:%20(\d+%E5%B9%B4\d+%E6%9C%88\d+%E6%97%A5)/);window.open('http://nansai.info/'+s[1]);undefined">何歳？</a>
+    <p>
 
-        <br>
-        <A HREF="javascript:location.href='http://maps.google.co.jp/maps?q='+encodeURIComponent(document.selection.createRange().text)+'&hl=ja';">
-<IMG SRC="imglet/heart03.gif" ALT="bookmarkret" BORDER="0"> グーグルマップ検索</A>
-    </body>
+    </p>
+
+    <a href="javascript:t=document.body.innerHTML;if(s=t.match(/%E8%AA%95%E7%94%9F%E6%97%A5:%20(\d+%E5%B9%B4\d+%E6%9C%88\d+%E6%97%A5)/)){window.open('http://nansai.info/'+s[1])}else{alert('not FOund');}undefined;">何歳？</a>
+
+</body>
 </html>
