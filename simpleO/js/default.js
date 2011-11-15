@@ -39,16 +39,41 @@ var Scroller = function() {
      * 初期化
      *
      */
+    this.loadImages = function() {
+
+        for (var i = 1; i < this.max_box_num; i ++) {
+            scandata_clone = this.scandata.eq(0).clone();
+            this.scandata_wrapper.append(scandata_clone.attr('id', 'scandata' + i));
+
+            // 追加したものを追加
+            this.scandata = $("." + this.scandata.attr('class'));
+        }
+
+        imgs = ([ 
+                'images/001.jpg',
+                'images/002.jpg',
+                'images/003.jpg',
+                'images/004.jpg',
+                'images/005.jpg',
+                'images/006.jpg',
+                'images/007.jpg',
+                'images/008.jpg',
+                'images/009.jpg',
+                'images/010.jpg'
+                ]);
+
+        for (var i = 0; i < this.max_box_num; i ++) {
+            this.scandata.eq(i).attr('src', imgs[i]);
+        }
+
+    };
+
     this.initialize = function() {
-
-
-
         this.scandata.css("height", this.height_of_scandata + 'px');
-        this.width_of_scandata = parseInt(this.scandata.css("width"));
+        this.width_of_scandata = parseInt(this.scandata.eq(0).css("width"));
         this.scandata_wrapper.css("padding-left", this.padding_of_scandata_wrapper + 'px');
         this.scandata.last().css("padding-right", this.padding_of_scandata_wrapper + 'px');
         this.reSize();
-
     };
 
     this.scrollRight = function(is_shift) {
@@ -82,6 +107,7 @@ var Scroller = function() {
 
         }
         this.scandata.css("height", this.height_of_scandata);
+        this.scandata.css("width", this.width_of_scandata);
         margin_top = (640 - parseInt(this.scandata.css("height"))) / 2;
         this.scandata_wrapper.css("margin-top", margin_top + 'px');
     };
@@ -148,6 +174,7 @@ $(document).ready(function(){
     S.scandata_wrapper = $(".scandata_wrapper");
     S.pager = $("#pager");
 
+    S.loadImages();
     $(".scandata").first().bind('load', function() {
         // 最初の画像の読み込みが終わってから初期化する
         S.initialize();
