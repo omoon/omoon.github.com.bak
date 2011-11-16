@@ -27,7 +27,6 @@ body {
     top:50px;
     left:260px;
     width:980px;
-    height:640px;
     z-index:2;
 }
 
@@ -35,7 +34,7 @@ body {
     position:relative;
     float:left;
     background: rgb(198, 198, 198); opacity: 0.4;
-    width:270px;
+    width:260px;
     height:100%;
     z-index:2;
 }
@@ -53,7 +52,6 @@ body {
 .scandata_area {
     position:absolute;
     top:50px;
-    height:640px;
     width:980px;
     overflow-y:scroll;
 }

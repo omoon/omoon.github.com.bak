@@ -11,10 +11,13 @@ var Scroller = function() {
     
     this.max_box_num = 7;
 
-    this.padding_of_scandata_wrapper = 495;
+    this.height_of_viewer = 595;
+
+    this.padding_of_scandata_wrapper = 490;
     this.height_of_scandata = 128;
     this.width_of_scandata = 0;
 
+    this.viewer_frame = '';
     this.scandata = '';
     this.scandata_area = '';
     this.scandata_wrapper = '';
@@ -109,10 +112,15 @@ var Scroller = function() {
     };
 
     this.initialize = function() {
+
+        this.viewer_frame.css("height", this.height_of_viewer + 'px');
+        this.scandata_area.css("height", this.height_of_viewer + 'px');
+
         this.scandata.css("height", this.height_of_scandata + 'px');
         this.width_of_scandata = parseInt(this.scandata.css("width"));
         this.scandata_wrapper.css("padding-left", this.padding_of_scandata_wrapper + 'px');
         this.scandata.last().css("padding-right", this.padding_of_scandata_wrapper + 'px');
+
         this.reSize();
     };
 
@@ -148,7 +156,7 @@ var Scroller = function() {
         }
         this.scandata.css("height", this.height_of_scandata);
         this.scandata.css("width", this.width_of_scandata);
-        margin_top = (640 - parseInt(this.scandata.css("height"))) / 2;
+        margin_top = (this.height_of_viewer - parseInt(this.scandata.css("height"))) / 2;
         this.scandata_wrapper.css("margin-top", margin_top + 'px');
     };
 
@@ -280,6 +288,7 @@ $(document).ready(function(){
 
     var S = new Scroller();
 
+    S.viewer_frame = $(".viewer_frame");
     S.scandata = $(".scandata");
     S.scandata_area = $(".scandata_area");
     S.scandata_wrapper = $(".scandata_wrapper");
