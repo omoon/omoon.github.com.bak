@@ -122,6 +122,8 @@ var Scroller = function() {
         this.scandata.last().css("padding-right", this.padding_of_scandata_wrapper + 'px');
 
         this.reSize();
+        this.displayPage();
+
     };
 
     this.scrollRight = function(is_shift) {
@@ -254,7 +256,7 @@ var Scroller = function() {
      * ページ番号表示
      */
     this.displayPage = function() {
-        this.pager.html('page : ' + parseInt(this.page_num));// + '/' + this.box_position);
+        this.pager.html('page : ' + parseInt(this.page_num) + '/' + this.images.length);// + '/' + this.box_position);
     };
 
     /**
