@@ -41,7 +41,7 @@ var Scroller = function() {
     /**
      * 拡大縮小比率
      */
-    this.zoom_scale = 2;
+    this.zoom_scale = Math.sqrt(2);
 
     /**
      * スクロール比率
