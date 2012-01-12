@@ -8,6 +8,11 @@ var Scroller = function() {
      * ズレの値
      */
     this.shift_num = 0;
+
+    /**
+     * 右始まりかどうか
+     */
+    this.is_right_start = true;
     
     this.max_box_num = 7;
 
@@ -36,7 +41,7 @@ var Scroller = function() {
     /**
      * 拡大縮小比率
      */
-    this.zoom_scale = 1.5;
+    this.zoom_scale = 2;
 
     /**
      * スクロール比率
@@ -85,8 +90,7 @@ var Scroller = function() {
             ]);
 
     /**
-     * 初期化
-     *
+     * 画像の読み込み
      */
     this.loadImages = function(book_num) {
 
@@ -111,6 +115,9 @@ var Scroller = function() {
 
     };
 
+    /**
+     * 初期化
+     */
     this.initialize = function() {
 
         this.viewer_frame.css("height", this.height_of_viewer + 'px');
@@ -211,14 +218,22 @@ var Scroller = function() {
      * 先頭に戻る
      */
     this.scrollToStart = function() {
-        this.jumpTo(1);
+        if (true === this.is_right_start) {
+            this.jumpTo(this.images.length);
+        } else {
+            this.jumpTo(1);
+        }
     };
 
     /**
      * 末尾に戻る
      */
     this.scrollToLast = function() {
-        this.jumpTo(this.images.length);
+        if (true === this.is_right_start) {
+            this.jumpTo(1);
+        } else {
+            this.jumpTo(this.images.length);
+        }
     };
 
     /**
@@ -230,7 +245,7 @@ var Scroller = function() {
         // shift_num の最大
         var max_shift_num = this.images.length - this.max_box_num;
 
-        // shift 発動時のbox_num
+        // shift 発動時の box_num
         var box_num_when_shifting = Math.round(this.max_box_num / 2);
 
         if (this.page_num <= box_num_when_shifting) {
@@ -256,7 +271,11 @@ var Scroller = function() {
      * ページ番号表示
      */
     this.displayPage = function() {
-        this.pager.html('page : ' + parseInt(this.page_num) + '/' + this.images.length);// + '/' + this.box_position);
+        var page_num_for_display = parseInt(this.page_num);
+        if (this.is_right_start) {
+            page_num_for_display = this.images.length - page_num_for_display + 1;
+        }
+        this.pager.html('page : ' + parseInt(page_num_for_display) + '/' + this.images.length);// + '/' + this.box_position);
     };
 
     /**
