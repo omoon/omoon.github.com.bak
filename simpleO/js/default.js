@@ -12,7 +12,7 @@ var Scroller = function() {
     /**
      * 右始まりかどうか
      */
-    this.is_right_start = true;
+    this.is_right_start = false;
     
     this.max_box_num = 7;
 
@@ -129,6 +129,7 @@ var Scroller = function() {
         this.scandata.last().css("padding-right", this.padding_of_scandata_wrapper + 'px');
 
         this.reSize();
+        this.scrollToStart();
         this.displayPage();
 
     };
@@ -304,10 +305,42 @@ var Scroller = function() {
 
 };
 
+var ConfigLoader = function() {
+
+    // 設定ファイル読み込み
+    jQuery.get("./config.txt", function(data) {
+        $("#config").html(data);
+	});
+
+    this.config = $("#config").html().split(/\n/);
+    //alert(this.config);
+
+    this.isRightStart = function() {
+        $.each(this.config, function(key, val) {
+            if (regs = val.match(/^start:(.*)$/)) {
+                if (regs[1] == 'right') {
+                    return true;
+                }
+            }
+        });
+        return false;
+    }
+}
 
 $(document).ready(function(){
 
+
+    var C = new ConfigLoader();
+
+    // 画像一覧読み込み
+    jQuery.get("./images.txt", null, function(data) {
+        d = data.split(/\n/);
+        //alert(d);
+	});
+
     var S = new Scroller();
+
+    S.is_start_right = C.isRightStart();
 
     S.viewer_frame = $(".viewer_frame");
     S.scandata = $(".scandata");

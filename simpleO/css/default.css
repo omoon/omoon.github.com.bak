@@ -4,6 +4,10 @@ body {
     background:#999;
 }
 
+#config {
+    display:none;
+}
+
 .header {
     font-family:Helvetica;
     font-size:12px;
