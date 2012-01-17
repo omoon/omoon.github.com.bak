@@ -307,40 +307,33 @@ var Scroller = function() {
 
 var ConfigLoader = function() {
 
-    // 設定ファイル読み込み
-    jQuery.get("./config.txt", function(data) {
-        $("#config").html(data);
-	});
-
-    this.config = $("#config").html().split(/\n/);
-    //alert(this.config);
-
     this.isRightStart = function() {
-        $.each(this.config, function(key, val) {
+        var is_right = false;
+        config = jQuery.data(document.body, 'config').split(/\n/);
+        $.each(config, function(key, val) {
             if (regs = val.match(/^start:(.*)$/)) {
                 if (regs[1] == 'right') {
-                    return true;
+                    is_right = true;
                 }
             }
         });
-        return false;
+        return is_right;
     }
+
 }
 
 $(document).ready(function(){
 
-
-    var C = new ConfigLoader();
-
-    // 画像一覧読み込み
-    jQuery.get("./images.txt", null, function(data) {
-        d = data.split(/\n/);
-        //alert(d);
-	});
+    $.ajax({ type: "GET", url: "./config.txt" }).done(function(data) {
+        jQuery.data(document.body, 'config', data);
+        
+    $.ajax({ type: "GET", url: "./images.txt" }).done(function(data) {
+        jQuery.data(document.body, 'images', data);
 
     var S = new Scroller();
+    var C = new ConfigLoader();
 
-    S.is_start_right = C.isRightStart();
+    S.is_right_start = C.isRightStart();
 
     S.viewer_frame = $(".viewer_frame");
     S.scandata = $(".scandata");
@@ -397,4 +390,6 @@ $(document).ready(function(){
         });
     });
 
+    }); // end load images.txt
+    }); // end load config.txt
 });
