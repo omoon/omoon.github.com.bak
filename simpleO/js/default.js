@@ -197,10 +197,6 @@ var Scroller = function() {
             this.box_position = this.max_box_num + 1;
         }
 
-        if (this.page_num > this.images.length) {
-            this.page_num = this.images.length;
-        }
-
         if (false === this.isScrollable(direction)) {
             this.box_position = this.box_position - direction;
             this.shift_num = this.shift_num + direction;
@@ -229,14 +225,14 @@ var Scroller = function() {
      * 先頭に戻る
      */
     this.scrollToStart = function() {
-        this.jumpTo(1);
+        this.jumpTo(0);
     };
 
     /**
      * 末尾に戻る
      */
     this.scrollToLast = function() {
-        this.jumpTo(this.images.length);
+        this.jumpTo(this.images.length + 1);
     };
 
     /**
@@ -284,6 +280,15 @@ var Scroller = function() {
         if (this.is_right_start) {
             page_num_for_display = this.images.length - page_num_for_display + 1;
         }
+
+        if (page_num_for_display > this.images.length) {
+            page_num_for_display = this.images.length;
+        }
+
+        if (page_num_for_display < 1) {
+            page_num_for_display = 1;
+        }
+        
         this.pager.html('page : ' + parseInt(page_num_for_display) + '/' + this.images.length);// + '/' + this.box_position);
     };
 
