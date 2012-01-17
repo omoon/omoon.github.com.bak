@@ -13,7 +13,6 @@ var Scroller = function() {
      * 右始まりかどうか
      */
     this.is_right_start = false;
-    
     this.max_box_num = 7;
 
     this.height_of_viewer = 595;
@@ -219,7 +218,7 @@ var Scroller = function() {
      * 先頭に戻る
      */
     this.scrollToStart = function() {
-        if (true === this.is_right_start) {
+        if (this.is_right_start) {
             this.jumpTo(this.images.length);
         } else {
             this.jumpTo(1);
@@ -230,7 +229,7 @@ var Scroller = function() {
      * 末尾に戻る
      */
     this.scrollToLast = function() {
-        if (true === this.is_right_start) {
+        if (this.is_right_start) {
             this.jumpTo(1);
         } else {
             this.jumpTo(this.images.length);
@@ -307,18 +306,32 @@ var Scroller = function() {
 
 var ConfigLoader = function() {
 
-    this.isRightStart = function() {
-        var is_right = false;
-        config = jQuery.data(document.body, 'config').split(/\n/);
-        $.each(config, function(key, val) {
-            if (regs = val.match(/^start:(.*)$/)) {
-                if (regs[1] == 'right') {
-                    is_right = true;
+    // 初期設定
+    this.start = 'left';
+    this.max_box_num = 7;
+
+    this.config = jQuery.data(document.body, 'config').split(/\n/);
+
+    $.each(this.config, function(key, val) {
+        if (regs = val.match(/^(.*):(.*)$/)) {
+            this[regs[1]] = regs[2];
+        }
+    });
+
+    /**
+     * 値の取得
+     */
+    this.getValue = function(key) {
+        var value = '';
+        $.each(this.config, function(k, v) {
+            if (regs = v.match(/^(.*):(.*)$/)) {
+                if (key == regs[1]) {
+                    value = regs[2];
                 }
             }
         });
-        return is_right;
-    }
+        return (value) ? value : this[key];
+    };
 
 }
 
@@ -333,7 +346,8 @@ $(document).ready(function(){
     var S = new Scroller();
     var C = new ConfigLoader();
 
-    S.is_right_start = C.isRightStart();
+    S.is_right_start = (C.getValue('start') == 'right') ? true : false;
+    S.max_box_num = C.getValue('max_box_num');
 
     S.viewer_frame = $(".viewer_frame");
     S.scandata = $(".scandata");
