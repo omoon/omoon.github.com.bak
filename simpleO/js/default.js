@@ -5,6 +5,11 @@
 var Scroller = function() {
 
     /**
+     * 初期化が終わっているかどうか
+     */
+    this.is_initialized = false;
+
+    /**
      * ズレの値
      */
     this.shift_num = 0;
@@ -119,17 +124,23 @@ var Scroller = function() {
      */
     this.initialize = function() {
 
-        this.viewer_frame.css("height", this.height_of_viewer + 'px');
-        this.scandata_area.css("height", this.height_of_viewer + 'px');
+        if (false == this.is_initialized) {
 
-        this.scandata.css("height", this.height_of_scandata + 'px');
-        this.width_of_scandata = parseInt(this.scandata.css("width"));
-        this.scandata_wrapper.css("padding-left", this.padding_of_scandata_wrapper + 'px');
-        this.scandata.last().css("padding-right", this.padding_of_scandata_wrapper + 'px');
+            this.viewer_frame.css("height", this.height_of_viewer + 'px');
+            this.scandata_area.css("height", this.height_of_viewer + 'px');
 
-        this.reSize();
-        this.scrollToStart();
-        this.displayPage();
+            this.scandata.css("height", this.height_of_scandata + 'px');
+            this.width_of_scandata = parseInt(this.scandata.css("width"));
+            this.scandata_wrapper.css("padding-left", this.padding_of_scandata_wrapper + 'px');
+            this.scandata.last().css("padding-right", this.padding_of_scandata_wrapper + 'px');
+
+            this.reSize();
+            this.scrollToStart();
+            this.displayPage();
+
+            this.is_initialized = true;
+
+        }
 
     };
 
@@ -218,29 +229,26 @@ var Scroller = function() {
      * 先頭に戻る
      */
     this.scrollToStart = function() {
-        if (this.is_right_start) {
-            this.jumpTo(this.images.length);
-        } else {
-            this.jumpTo(1);
-        }
+        this.jumpTo(1);
     };
 
     /**
      * 末尾に戻る
      */
     this.scrollToLast = function() {
-        if (this.is_right_start) {
-            this.jumpTo(1);
-        } else {
-            this.jumpTo(this.images.length);
-        }
+        this.jumpTo(this.images.length);
     };
 
     /**
      * ジャンプ
      */
     this.jumpTo = function(page_num) {
-        this.page_num = page_num;
+
+        if (this.is_right_start) {
+            this.page_num = this.images.length - page_num + 1;
+        } else {
+            this.page_num = page_num;
+        }
 
         // shift_num の最大
         var max_shift_num = this.images.length - this.max_box_num;
@@ -264,6 +272,7 @@ var Scroller = function() {
             }
 
         }
+
         this.doScroll();
     };
 
@@ -344,16 +353,16 @@ $(document).ready(function(){
         jQuery.data(document.body, 'images', data);
 
     var S = new Scroller();
-    var C = new ConfigLoader();
-
-    S.is_right_start = (C.getValue('start') == 'right') ? true : false;
-    S.max_box_num = C.getValue('max_box_num');
 
     S.viewer_frame = $(".viewer_frame");
     S.scandata = $(".scandata");
     S.scandata_area = $(".scandata_area");
     S.scandata_wrapper = $(".scandata_wrapper");
     S.pager = $("#pager");
+
+    var C = new ConfigLoader();
+    S.is_right_start = (C.getValue('start') == 'right') ? true : false;
+    S.max_box_num = C.getValue('max_box_num');
 
     S.loadImages(1);
     $(".scandata").first().bind('load', function() {
