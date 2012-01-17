@@ -57,50 +57,14 @@ var Scroller = function() {
     /**
      * 画像配列
      */
-    this.images = '';
-    this.books = ([]);
-
-    this.books[1] = ([ 
-            'images/001.jpg',
-            'images/002.jpg',
-            'images/003.jpg',
-            'images/004.jpg',
-            'images/005.jpg',
-            'images/006.jpg',
-            'images/007.jpg',
-            'images/008.jpg',
-            'images/009.jpg',
-            'images/010.jpg'
-            ]);
-
-    this.books[2] = ([ 
-            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0001.jpg',
-            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0002.jpg',
-            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0003.jpg',
-            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0004.jpg',
-            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0005.jpg',
-            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0006.jpg',
-            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0007.jpg',
-            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0008.jpg',
-            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0009.jpg',
-            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0010.jpg',
-            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0011.jpg',
-            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0012.jpg',
-            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0013.jpg',
-            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0014.jpg',
-            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0015.jpg',
-            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0016.jpg',
-            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0017.jpg',
-            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0018.jpg',
-            'http://www.flib.u-fukui.ac.jp/elib/kaigan/photo/src/0019.jpg'
-            ]);
+    this.images = ([]);
 
     /**
      * 画像の読み込み
      */
-    this.loadImages = function(book_num) {
+    this.loadImages = function() {
 
-        this.images = (this.is_right_start) ? this.books[book_num].reverse() : this.books[book_num];
+        this.images = (this.is_right_start) ? this.images.reverse() : this.images;
 
         for (var i = 1; i < this.max_box_num; i ++) {
             this.scandata.eq(i).remove();
@@ -332,6 +296,7 @@ var ConfigLoader = function() {
     this.max_box_num = 7;
 
     this.config = jQuery.data(document.body, 'config').split(/\n/);
+    this.images = jQuery.data(document.body, 'images').split(/\n/);
 
     $.each(this.config, function(key, val) {
         if (regs = val.match(/^(.*):(.*)$/)) {
@@ -352,6 +317,19 @@ var ConfigLoader = function() {
             }
         });
         return (value) ? value : this[key];
+    };
+
+    /**
+     * 画像一覧の取得
+     */
+    this.getImages = function() {
+        var images = ([]);
+        $.each(this.images, function(k, v) {
+            if (v) {
+                images.push(v);
+            }
+        });
+        return images;
     };
 
 }
@@ -375,8 +353,9 @@ $(document).ready(function(){
     var C = new ConfigLoader();
     S.is_right_start = (C.getValue('start') == 'right') ? true : false;
     S.max_box_num = C.getValue('max_box_num');
+    S.images = C.getImages();
 
-    S.loadImages(1);
+    S.loadImages();
     $(".scandata").first().bind('load', function() {
         // 最初の画像の読み込みが終わってから初期化する
         S.initialize();
@@ -415,14 +394,6 @@ $(document).ready(function(){
 
         }
 
-    });
-
-    $("#book").change(function() {
-        S.loadImages($(this).val());
-        $(".scandata").first().bind('load', function() {
-            // 最初の画像の読み込みが終わってから初期化する
-            S.initialize();
-        });
     });
 
     }); // end load images.txt
