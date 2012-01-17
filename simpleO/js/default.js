@@ -98,7 +98,7 @@ var Scroller = function() {
      */
     this.loadImages = function(book_num) {
 
-        this.images = this.books[book_num];
+        this.images = (this.is_right_start) ? this.books[book_num].reverse() : this.books[book_num];
 
         for (var i = 1; i < this.max_box_num; i ++) {
             this.scandata.eq(i).remove();
