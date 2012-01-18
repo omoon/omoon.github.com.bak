@@ -210,7 +210,7 @@ var Scroller = function() {
     this.jumpTo = function(page_num) {
 
         if (this.is_right_start) {
-            this.page_num = this.images.length - page_num + 1;
+            this.page_num = this.images.length - page_num + 2;
         } else {
             this.page_num = page_num;
         }
@@ -247,7 +247,7 @@ var Scroller = function() {
     this.displayPage = function() {
         var page_num_for_display = parseInt(this.page_num);
         if (this.is_right_start) {
-            page_num_for_display = this.images.length - page_num_for_display + 1;
+            page_num_for_display = this.images.length - page_num_for_display + 2;
         }
 
         if (page_num_for_display > this.images.length) {
