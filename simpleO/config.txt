@@ -1,1 +1,2 @@
 start:right
+max_box_num:9

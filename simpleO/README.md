@@ -19,6 +19,7 @@ config.txt
 ---------
 
 - start:(right|left) で右始まりか左始まりかを指定します。
+- max_box_num:9 で一度に表示する画像の数を指定します。
 
 images.txt
 ---------
